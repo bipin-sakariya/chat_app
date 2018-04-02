@@ -1,0 +1,44 @@
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+<div class="chat-main">
+  <div class="heading">
+      Chat <%= @code %>
+      <span class="right-icon">
+        <i class="fa fa-minus"></i>
+        <i class="fa fa-plus"></i>
+      </span>
+  </div>
+
+  <div class="chat-content">
+    <ul class="chat" id="conversation" data-id = "<%= @conversation.id %>">
+      <% @conversation.messages.each do |message|%>
+        <% if  message.user_id == current_user.id %>
+          <%= render :partial => 'chat/message', :locals => {message: message, user: message.user} %>
+        <% else %>
+          <%= render :partial => 'chat/receiver_message', :locals => {message: message, user: message.user} %>
+        <% end %>
+      <% end %>
+    </ul>
+
+    <div class="form-textarea">
+      <%= form_for Message.new, url: {action: "create"},:authenticity_token => true, remote: true, class: 'form_submit' do |f| %>
+        <%= f.hidden_field :conversation, value: @conversation.id %>
+        <%= f.hidden_field :user_id, value: @user.id %>
+
+        <%= f.text_area :body, class: "form-control input-sm",placeholder: "Type your message here..." %>
+        <%= f.submit "Send", class: "btn btn-warning btn-sm" %>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+
+
+<script>
+  $( document ).ready(function() {
+    $('.heading').click(function(){
+      $(this).next().slideToggle('show');
+      $(this).toggleClass('show');
+    });
+  });
+</script>

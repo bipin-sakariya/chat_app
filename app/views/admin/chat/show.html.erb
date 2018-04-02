@@ -1,0 +1,44 @@
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="panel panel-primary">
+                <div class="heading">
+                    <span class="glyphicon glyphicon-comment"></span> Chat
+                    <%= @code %>
+                </div>
+                <div class="panel-body">
+                  <ul class="chat" id="conversation" data-id = "<%= @conversation.id %>">
+                    <% @conversation.messages.each do |message|%>
+                      <% if  message.user_id == User.first.id %>
+                        <%= render :partial => 'chat/message', :locals => {message: message, user: message.user} %>
+                      <% else %>
+                        <%= render :partial => 'chat/receiver_message', :locals => {message: message, user: message.user} %>
+                      <% end %>
+                    <% end %>
+                  </ul>
+                </div>
+                <div class="panel-footer">
+                    <div class="input-group">
+                        <%= form_for @message, :url => admin_chat_index_path,:authenticity_token => true, remote: true, class: 'form_submit' do |f| %>
+                        <%= f.hidden_field :conversation, value: @conversation.id %>
+                        <%= f.hidden_field :user_id, value: @user.id %>
+
+                        <%= f.text_area :body, class: "form-control input-sm",placeholder: "Type your message here..." %>
+                        <%= f.submit "Send", class: "btn btn-warning btn-sm" %>
+                      <% end %>
+                        <!-- <input id="btn-input" type="text" class="form-control input-sm" placeholder="Type your message here..." />
+                        <span class="input-group-btn">
+                            <button class="btn btn-warning btn-sm" id="btn-chat">
+                                Send</button>
+                        </span> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+</script>
